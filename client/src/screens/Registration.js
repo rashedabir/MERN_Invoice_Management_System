@@ -1,12 +1,50 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Registration() {
+  const [firstname, setFirstName] = useState("");
+  const [lastname, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rePassword, setRePassword] = useState("");
+  const [company, setCompany] = useState("");
+  const [phone, setPhone] = useState("");
+  const [country, setCountry] = useState("");
+  const fullname = firstname + " " + lastname;
+
+  const registerSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post("/user/register", {
+        name: fullname,
+        email: email,
+        password: password,
+        rePassword: rePassword,
+        company: company,
+        phone: phone,
+        country: country,
+      });
+
+      localStorage.setItem("firstLogin", true);
+      window.location.href = "/dashboard";
+    } catch (error) {
+      toast.error(error.response.data.msg);
+    }
+  };
+
   return (
-    <div className="container p-5 form_box">
+    <div className="container p-5 register_box">
+      <ToastContainer />
       <h3 className="pb-4 text-center">
-        sev<strong>Desk</strong>
+        <strong>Entkreis</strong>
       </h3>
-      <form className="row g-3 needs-validation" novalidate>
+      <form
+        onSubmit={registerSubmit}
+        className="row g-3 needs-validation"
+        novalidate
+      >
         <div className="col-md-6">
           <label for="validationCustom03" className="form-label">
             First Name
@@ -14,10 +52,11 @@ function Registration() {
           <input
             type="text"
             className="form-control"
-            id="validationCustom01"
             placeholder="First Name"
+            onChange={(e) => {
+              setFirstName(e.target.value);
+            }}
           />
-          <div className="valid-feedback">Looks good!</div>
         </div>
         <div className="col-md-6">
           <label for="validationCustom03" className="form-label">
@@ -26,10 +65,11 @@ function Registration() {
           <input
             type="text"
             className="form-control"
-            id="validationCustom02"
             placeholder="Last Name"
+            onChange={(e) => {
+              setLastName(e.target.value);
+            }}
           />
-          <div className="valid-feedback">Looks good!</div>
         </div>
         <div className="col-md-12">
           <label for="validationCustom03" className="form-label">
@@ -45,10 +85,39 @@ function Registration() {
               id="exampleInputEmail1"
               aria-describedby="emailHelp"
               placeholder="Your Email"
-              required
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
             />
-            <div className="invalid-feedback">Please choose a username.</div>
           </div>
+        </div>
+        <div className="col-md-6">
+          <label for="validationCustom03" className="form-label">
+            Password*
+          </label>
+          <input
+            type="password"
+            className="form-control"
+            placeholder="Password"
+            id="exampleInputPassword1"
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
+          />
+        </div>
+        <div className="col-md-6">
+          <label for="validationCustom03" className="form-label">
+            Repeat Password*
+          </label>
+          <input
+            type="password"
+            className="form-control"
+            placeholder="Repeat Password"
+            id="exampleInputPassword1"
+            onChange={(e) => {
+              setRePassword(e.target.value);
+            }}
+          />
         </div>
         <div className="col-md-12">
           <label for="validationCustom03" className="form-label">
@@ -58,9 +127,10 @@ function Registration() {
             type="text"
             className="form-control"
             placeholder="Comapny Name"
-            id="validationCustom03"
+            onChange={(e) => {
+              setCompany(e.target.value);
+            }}
           />
-          <div className="invalid-feedback">Please provide a valid city.</div>
         </div>
         <div className="col-md-6">
           <label for="validationCustom05" className="form-label">
@@ -69,39 +139,27 @@ function Registration() {
           <input
             type="text"
             className="form-control"
-            id="validationCustom05"
             placeholder="Phone"
-            required
+            onChange={(e) => {
+              setPhone(e.target.value);
+            }}
           />
-          <div className="invalid-feedback">Please provide a valid zip.</div>
         </div>
         <div className="col-md-6">
           <label for="validationCustom04" className="form-label">
             Country*
           </label>
-          <select className="form-select" id="validationCustom04" required>
-            <option selected disabled value="">
-              Choose...
+          <select
+            className="form-select"
+            onChange={(e) => {
+              setCountry(e.target.value);
+            }}
+          >
+            <option selected disabled>
+              Choose
             </option>
-            <option>...</option>
+            <option>Bangladesh</option>
           </select>
-          <div className="invalid-feedback">Please select a valid state.</div>
-        </div>
-        <div className="col-12">
-          <div className="form-check">
-            <input
-              className="form-check-input"
-              type="checkbox"
-              value=""
-              id="invalidCheck"
-            />
-            <label className="form-check-label" for="invalidCheck">
-              Agree to terms and conditions
-            </label>
-            <div className="invalid-feedback">
-              You must agree before submitting.
-            </div>
-          </div>
         </div>
         <div className="col-12">
           <button className="btn btn-primary" type="submit">

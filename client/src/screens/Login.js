@@ -1,13 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
 function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const loginSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post("/user/login", {
+        email: email,
+        password: password,
+      });
+      localStorage.setItem("firstLogin", true);
+
+      window.location.href = "/dashboard";
+    } catch (error) {
+      toast.error(error.response.data.msg);
+    }
+  };
+
   return (
     <div className="container p-5 text-center form_box">
+      <ToastContainer />
       <h3 className="pb-4">
-        sev<strong>Desk</strong>
+        <strong>Entkreis</strong>
       </h3>
-      <form>
+      <form onSubmit={loginSubmit}>
         <div className="mb-3">
           <input
             type="email"
@@ -15,6 +37,9 @@ function Login() {
             className="form-control"
             id="exampleInputEmail1"
             aria-describedby="emailHelp"
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
           />
         </div>
         <div className="mb-3">
@@ -23,6 +48,9 @@ function Login() {
             placeholder="Password"
             className="form-control"
             id="exampleInputPassword1"
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
           />
         </div>
         <button type="submit" className="btn btn-primary">

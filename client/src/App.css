@@ -12,7 +12,14 @@ body {
   margin: 7% auto;
   background-color: white;
 }
-
+.register_box {
+  max-width: 500px;
+  margin: 15px auto;
+  background-color: white;
+}
+.register_box .btn {
+  width: 100%;
+}
 .form_box .btn {
   width: 100%;
 }
@@ -38,4 +45,21 @@ body {
   border-bottom: 2px solid #e6e6e6;
   top: 50%;
   left: 0;
+}
+
+/*---------------home-----------------*/
+
+.home {
+  position: relative;
+}
+.home img {
+  width: 100%;
+  max-height: 80vh;
+  object-fit: cover;
+  opacity: 0.5;
+}
+.home_details {
+  position: absolute;
+  top: 30%;
+  left: 10%;
 }
