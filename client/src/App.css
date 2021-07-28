@@ -66,3 +66,12 @@ body {
 .customer i {
   cursor: pointer;
 }
+.invoice i {
+  cursor: pointer;
+}
+.insert_invoice {
+  background-color: white;
+}
+.total_invoce {
+  border-top: 1px solid #e6e6e6;
+}

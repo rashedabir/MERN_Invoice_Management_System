@@ -53,6 +53,15 @@ function Header() {
                   Customer
                 </Link>
               </li>
+              <li className="nav-item">
+                <Link
+                  className="nav-link active"
+                  aria-current="page"
+                  to="/invoice"
+                >
+                  Invoice
+                </Link>
+              </li>
             </ul>
           ) : (
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
@@ -88,16 +97,19 @@ function Header() {
             </ul>
           )}
           {isLogged ? (
-            <div className="d-flex">
-              <ul className="navbar-nav mx-2 mt-2 mb-lg-0">
-                <li className="nav-item">
-                  <i className="fas fa-user-circle"></i> {user.email}
-                </li>
-              </ul>
-              <button className="btn btn-outline-danger mx-1" onClick={logOut}>
-                Logout
-              </button>
-            </div>
+            <ul className="navbar-nav mx-2 mb-lg-0 align-center">
+              <li className="nav-item mt-2">
+                <i className="fas fa-user-circle"></i> {user.email}
+              </li>
+              <li>
+                <button
+                  className="btn btn-outline-danger mx-2"
+                  onClick={logOut}
+                >
+                  Logout
+                </button>
+              </li>
+            </ul>
           ) : (
             <div className="d-flex">
               <Link className="btn btn-outline-primary mx-1" to="/login">

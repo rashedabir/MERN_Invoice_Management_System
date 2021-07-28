@@ -52,51 +52,53 @@ function Customer() {
         <i className="fas fa-user-plus mx-2"></i>
         Add Customer
       </button>
-      <table className="table table-light my-3 table-striped">
-        <thead>
-          <tr>
-            <th scope="col">Type</th>
-            <th scope="col">Phone</th>
-            <th scope="col">Name</th>
-            <th scope="col">City</th>
-            <th scope="col">Action</th>
-          </tr>
-        </thead>
-        {customer
-          ? customer.map((customer) => (
-              <tbody>
-                <tr>
-                  <td>{customer.type}</td>
-                  <td>{customer.phone}</td>
-                  <td>{customer.name}</td>
-                  <td>{customer.city}</td>
-                  <td>
-                    <i
-                      className="fas fa-edit mx-1 text-primary"
-                      data-bs-toggle="modal"
-                      data-bs-target="#staticBackdrop"
-                      onClick={() => {
-                        editCustomer(
-                          customer._id,
-                          customer.name,
-                          customer.phone,
-                          customer.city,
-                          customer.type
-                        );
-                      }}
-                    ></i>
-                    <i
-                      className="fas fa-trash-alt mx-1 text-danger"
-                      onClick={() => {
-                        deleteCustomer(customer._id, customer.name);
-                      }}
-                    ></i>
-                  </td>
-                </tr>
-              </tbody>
-            ))
-          : null}
-      </table>
+      <div className="table-responsive">
+        <table className="table table-light my-3 table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Type</th>
+              <th scope="col">Phone</th>
+              <th scope="col">Name</th>
+              <th scope="col">City</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {customer
+              ? customer.map((customer) => (
+                  <tr>
+                    <td>{customer.type}</td>
+                    <td>{customer.phone}</td>
+                    <td>{customer.name}</td>
+                    <td>{customer.city}</td>
+                    <td>
+                      <i
+                        className="fas fa-edit mx-1 text-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#staticBackdrop"
+                        onClick={() => {
+                          editCustomer(
+                            customer._id,
+                            customer.name,
+                            customer.phone,
+                            customer.city,
+                            customer.type
+                          );
+                        }}
+                      ></i>
+                      <i
+                        className="fas fa-trash-alt mx-1 text-danger"
+                        onClick={() => {
+                          deleteCustomer(customer._id, customer.name);
+                        }}
+                      ></i>
+                    </td>
+                  </tr>
+                ))
+              : null}
+          </tbody>
+        </table>
+      </div>
       <CustomerModal
         id={id}
         name={name}

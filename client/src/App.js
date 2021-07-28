@@ -9,6 +9,8 @@ import Home from "./screens/Home";
 import { useContext } from "react";
 import NotFound from "./screens/NotFound";
 import Customer from "./screens/Customer";
+import Invoice from "./screens/Invoice";
+import AddInvoice from "./screens/AddInvoice";
 
 function App() {
   const state = useContext(GlobalState);
@@ -33,6 +35,16 @@ function App() {
           exact
           component={isLogged ? Customer : NotFound}
           path="/customer"
+        />
+        <Route
+          exact
+          component={isLogged ? Invoice : NotFound}
+          path="/invoice"
+        />
+        <Route
+          exact
+          component={isLogged ? AddInvoice : NotFound}
+          path="/addinvoice"
         />
         <Route exact component={NotFound} path="*" />
       </Switch>
