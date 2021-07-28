@@ -4,22 +4,39 @@ import Header from "./components/Header";
 import Login from "./screens/Login";
 import Registration from "./screens/Registration";
 import DashBoard from "./screens/DashBoard";
-import { DataProvider } from "./GlobalState";
+import { GlobalState } from "./GlobalState";
 import Home from "./screens/Home";
+import { useContext } from "react";
+import NotFound from "./screens/NotFound";
+import Customer from "./screens/Customer";
 
 function App() {
+  const state = useContext(GlobalState);
+  const [isLogged] = state.userAPI.isLogged;
   return (
-    <DataProvider>
-      <Router>
-        <Header />
-        <Switch>
-          <Route exact component={Home} path="/" />
-          <Route exact component={Login} path="/login" />
-          <Route exact component={Registration} path="/register" />
-          <Route exact component={DashBoard} path="/dashboard" />
-        </Switch>
-      </Router>
-    </DataProvider>
+    <Router>
+      <Header />
+      <Switch>
+        <Route exact component={Home} path="/" />
+        <Route exact component={isLogged ? NotFound : Login} path="/login" />
+        <Route
+          exact
+          component={isLogged ? NotFound : Registration}
+          path="/register"
+        />
+        <Route
+          exact
+          component={isLogged ? DashBoard : NotFound}
+          path="/dashboard"
+        />
+        <Route
+          exact
+          component={isLogged ? Customer : NotFound}
+          path="/customer"
+        />
+        <Route exact component={NotFound} path="*" />
+      </Switch>
+    </Router>
   );
 }
 

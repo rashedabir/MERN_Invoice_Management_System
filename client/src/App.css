@@ -63,3 +63,6 @@ body {
   top: 30%;
   left: 10%;
 }
+.customer i {
+  cursor: pointer;
+}
