@@ -1,16 +1,34 @@
+import axios from "axios";
 import React, { useContext, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { GlobalState } from "../GlobalState";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useHistory } from "react-router-dom";
+import StripeCheckout from "react-stripe-checkout";
 
 function AddInvoice() {
   const state = useContext(GlobalState);
+  const [token] = state.token;
+  const [callback, setCallback] = state.invoiceAPI.callback;
   const [customer] = state.customerAPI.customer;
   const [products, setProducts] = useState([
     { id: uuidv4(), productName: "", quantity: "", price: "", amount: "" },
   ]);
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
+  const [country, setCountry] = useState("");
+  const [header, setHeader] = useState("");
+  const [number, setNumber] = useState("");
+  const [invoiceDate, setInvoiceDate] = useState("");
+  const [duaDate, setDueDate] = useState("");
+  const [delivaryDate, setDelevaryDate] = useState("");
+  const [reference, setReference] = useState("");
+  const history = useHistory();
 
   const amounts = products.map((product) => product.amount);
   const total = amounts.reduce((acc, item) => (acc += item), 0);
+  const intotal = parseFloat(total).toFixed(2);
 
   const handleChangeInput = (id, event) => {
     const newInputFields = products.map((i) => {
@@ -39,8 +57,39 @@ function AddInvoice() {
     setProducts(values);
   };
 
+  const saveInvoice = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post(
+        "/api/invoice",
+        {
+          name: name,
+          address: address,
+          country: country,
+          header: header,
+          number: number,
+          invoiceDate: invoiceDate,
+          duaDate: duaDate,
+          delivaryDate: delivaryDate,
+          reference: reference,
+          products: products,
+          total: total,
+        },
+        {
+          headers: { Authorization: token },
+        }
+      );
+
+      toast.success("Invoices Added");
+      setCallback(!callback);
+    } catch (error) {
+      toast.error(error.response.data.msg);
+    }
+  };
+
   return (
     <div className="container insert_invoice my-5">
+      <ToastContainer />
       <form className="p-3">
         <h4 className="mt-4">Add Invoice</h4>
         <div className="row">
@@ -52,12 +101,15 @@ function AddInvoice() {
               <select
                 className="form-select"
                 aria-label="Default select example"
+                onChange={(e) => {
+                  setName(e.target.value);
+                }}
               >
                 <option selected disabled>
                   select a customer
                 </option>
                 {customer.map((customer) => (
-                  <option selected>{customer.name}</option>
+                  <option>{customer.name}</option>
                 ))}
               </select>
             </div>
@@ -69,6 +121,9 @@ function AddInvoice() {
                 class="form-control"
                 id="exampleFormControlTextarea1"
                 rows="3"
+                onChange={(e) => {
+                  setAddress(e.target.value);
+                }}
               ></textarea>
             </div>
             <div className="mb-3">
@@ -78,11 +133,14 @@ function AddInvoice() {
               <select
                 className="form-select"
                 aria-label="Default select example"
+                onChange={(e) => {
+                  setCountry(e.target.value);
+                }}
               >
-                <option selected>select</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+                <option selected disabled>
+                  select
+                </option>
+                <option value="usa">usa</option>
               </select>
             </div>
           </div>
@@ -96,6 +154,9 @@ function AddInvoice() {
                   type="text"
                   className="form-control"
                   placeholder="Invoice header"
+                  onChange={(e) => {
+                    setHeader(e.target.value);
+                  }}
                 />
               </div>
               <div className="col-md-6 mb-3">
@@ -106,6 +167,9 @@ function AddInvoice() {
                   type="text"
                   className="form-control"
                   placeholder="Invoice number"
+                  onChange={(e) => {
+                    setNumber(e.target.value);
+                  }}
                 />
               </div>
               <div className="col-md-6 mb-3">
@@ -116,6 +180,9 @@ function AddInvoice() {
                   type="date"
                   className="form-control"
                   placeholder="Invoice header"
+                  onChange={(e) => {
+                    setInvoiceDate(e.target.value);
+                  }}
                 />
               </div>
               <div className="col-md-6 mb-3">
@@ -125,7 +192,9 @@ function AddInvoice() {
                 <input
                   type="date"
                   className="form-control"
-                  placeholder="Invoice number"
+                  onChange={(e) => {
+                    setDueDate(e.target.value);
+                  }}
                 />
               </div>
               <div className="col-md-6 mb-3">
@@ -135,7 +204,9 @@ function AddInvoice() {
                 <input
                   type="date"
                   className="form-control"
-                  placeholder="Invoice header"
+                  onChange={(e) => {
+                    setDelevaryDate(e.target.value);
+                  }}
                 />
               </div>
               <div className="col-md-6 mb-3">
@@ -145,7 +216,10 @@ function AddInvoice() {
                 <input
                   type="text"
                   className="form-control"
-                  placeholder="Invoice number"
+                  placeholder="Reference"
+                  onChange={(e) => {
+                    setReference(e.target.value);
+                  }}
                 />
               </div>
             </div>
@@ -232,13 +306,27 @@ function AddInvoice() {
         >
           + Add Line Item
         </button>
+        <div className="d-flex justify-content-end pt-3">
+          <button
+            className="btn btn-light mx-1"
+            onClick={() => {
+              history.push("/invoice");
+            }}
+          >
+            Back
+          </button>
+          <button className="btn btn-primary mx-1" onClick={saveInvoice}>
+            Save Invoice
+          </button>
+          <StripeCheckout stripeKey="pk_test_51JIDmDAcmD9cnihVfUC3Z06F9HJyqVKaUIl6UhDBF5HcbgR8T5PKLnPiDhjJf6wz4H1Lk7ZMiAWAW50Th3VwA6Q600zZG1YIim" />
+        </div>
       </form>
       <div className="px-5 py-3 total_invoce d-flex justify-content-between align-items-center">
         <div>
           <h3>Total</h3>
         </div>
         <div>
-          <h5>{total ? parseFloat(total).toFixed(2) : "0.00"} USD</h5>
+          <h5>{intotal ? intotal : "0.00"} USD</h5>
         </div>
       </div>
     </div>
