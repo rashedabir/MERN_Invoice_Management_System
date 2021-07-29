@@ -17,7 +17,7 @@ function AddInvoice() {
   const [products, setProducts] = useState([
     {
       id: uuidv4(),
-      productName: "",
+      description: "",
       quantity: "",
       price: "",
       tax: "",
@@ -68,7 +68,7 @@ function AddInvoice() {
       ...products,
       {
         id: uuidv4(),
-        productName: "",
+        description: "",
         quantity: "",
         price: "",
         tax: "",
@@ -171,7 +171,7 @@ function AddInvoice() {
       setDelevaryDate("");
       setReference("");
       setProducts([
-        { id: uuidv4(), productName: "", quantity: "", price: "", amount: "" },
+        { id: uuidv4(), description: "", quantity: "", price: "", amount: "" },
       ]);
     }
   }, [params.id, invoices]);
@@ -378,9 +378,9 @@ function AddInvoice() {
                 <input
                   type="text"
                   className="form-control"
-                  name="productName"
+                  name="description"
                   placeholder="Product Name"
-                  value={product.productName}
+                  value={product.description}
                   onChange={(event) => handleChangeInput(product.id, event)}
                 />
               </div>

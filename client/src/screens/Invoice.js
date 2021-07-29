@@ -10,7 +10,7 @@ function Invoice() {
   const [invoices] = state.invoiceAPI.invoice;
   const [callback, setCallback] = state.invoiceAPI.callback;
   const [token] = state.token;
-  const [setId] = useState("");
+  const [id, setId] = useState("");
 
   const deleteInvoice = async (id) => {
     setId(id);
