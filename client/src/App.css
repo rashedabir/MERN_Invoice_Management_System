@@ -4,18 +4,17 @@
 }
 body {
   font-family: "Poppins", sans-serif;
-  background-color: #e6e6e6;
 }
 
 .form_box {
   max-width: 500px;
   margin: 7% auto;
-  background-color: white;
+  border: 2px solid #eee;
 }
 .register_box {
   max-width: 500px;
   margin: 15px auto;
-  background-color: white;
+  border: 2px solid #eee;
 }
 .register_box .btn {
   width: 100%;
@@ -70,8 +69,13 @@ body {
   cursor: pointer;
 }
 .insert_invoice {
-  background-color: white;
+  border: 2px solid #eee;
 }
 .total_invoce {
   border-top: 1px solid #e6e6e6;
+}
+
+a {
+  text-decoration: none;
+  color: black;
 }

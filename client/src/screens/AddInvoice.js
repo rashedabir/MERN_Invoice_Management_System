@@ -1,10 +1,10 @@
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { GlobalState } from "../GlobalState";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import StripeCheckout from "react-stripe-checkout";
 
 function AddInvoice() {
@@ -12,8 +12,17 @@ function AddInvoice() {
   const [token] = state.token;
   const [callback, setCallback] = state.invoiceAPI.callback;
   const [customer] = state.customerAPI.customer;
+  const [invoices] = state.invoiceAPI.invoice;
   const [products, setProducts] = useState([
-    { id: uuidv4(), productName: "", quantity: "", price: "", amount: "" },
+    {
+      id: uuidv4(),
+      productName: "",
+      quantity: "",
+      price: "",
+      tax: "",
+      discount: "",
+      amount: "",
+    },
   ]);
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
@@ -24,11 +33,23 @@ function AddInvoice() {
   const [duaDate, setDueDate] = useState("");
   const [delivaryDate, setDelevaryDate] = useState("");
   const [reference, setReference] = useState("");
+  const [onEdit, setOnEdit] = useState(false);
+  const [_id, setId] = useState("");
   const history = useHistory();
+  const params = useParams();
 
   const amounts = products.map((product) => product.amount);
-  const total = amounts.reduce((acc, item) => (acc += item), 0);
-  const intotal = parseFloat(total).toFixed(2);
+  const total = amounts
+    .reduce((acc, item) => (acc += parseFloat(item)), 0)
+    .toFixed(2);
+
+  const tax = products.map((product) => product.tax);
+  const totalTax = tax
+    .reduce((acc, item) => (acc += parseFloat(item)), 0)
+    .toFixed(2);
+
+  const salesTax = (total * (totalTax / 100)).toFixed(2);
+  const inTotal = (parseFloat(salesTax) + parseFloat(total)).toFixed(2);
 
   const handleChangeInput = (id, event) => {
     const newInputFields = products.map((i) => {
@@ -44,7 +65,15 @@ function AddInvoice() {
     e.preventDefault();
     setProducts([
       ...products,
-      { id: uuidv4(), productName: "", quantity: "", price: "", amount: "" },
+      {
+        id: uuidv4(),
+        productName: "",
+        quantity: "",
+        price: "",
+        tax: "",
+        discount: "",
+        amount: "",
+      },
     ]);
   };
 
@@ -60,38 +89,97 @@ function AddInvoice() {
   const saveInvoice = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(
-        "/api/invoice",
-        {
-          name: name,
-          address: address,
-          country: country,
-          header: header,
-          number: number,
-          invoiceDate: invoiceDate,
-          duaDate: duaDate,
-          delivaryDate: delivaryDate,
-          reference: reference,
-          products: products,
-          total: total,
-        },
-        {
-          headers: { Authorization: token },
-        }
-      );
-
-      toast.success("Invoices Added");
-      setCallback(!callback);
+      if (onEdit) {
+        await axios.put(
+          `/api/invoice/${_id}`,
+          {
+            name: name,
+            address: address,
+            country: country,
+            header: header,
+            number: number,
+            invoiceDate: invoiceDate,
+            duaDate: duaDate,
+            delivaryDate: delivaryDate,
+            reference: reference,
+            products: products,
+            total: inTotal,
+          },
+          {
+            headers: { Authorization: token },
+          }
+        );
+        toast.success("Invoices Updated");
+        setCallback(!callback);
+      } else {
+        await axios.post(
+          "/api/invoice",
+          {
+            name: name,
+            address: address,
+            country: country,
+            header: header,
+            number: number,
+            invoiceDate: invoiceDate,
+            duaDate: duaDate,
+            delivaryDate: delivaryDate,
+            reference: reference,
+            products: products,
+            total: inTotal,
+          },
+          {
+            headers: { Authorization: token },
+          }
+        );
+        toast.success("Invoices Added");
+        setCallback(!callback);
+      }
     } catch (error) {
       toast.error(error.response.data.msg);
     }
   };
 
+  useEffect(() => {
+    if (params.id) {
+      invoices.forEach((invoice) => {
+        if (invoice._id === params.id) {
+          setOnEdit(true);
+          setId(invoice._id);
+          setName(invoice.name);
+          setAddress(invoice.address);
+          setCountry(invoice.country);
+          setHeader(invoice.header);
+          setNumber(invoice.number);
+          setInvoiceDate(invoice.invoiceDate);
+          setDueDate(invoice.duaDate);
+          setDelevaryDate(invoice.delivaryDate);
+          setReference(invoice.reference);
+          setProducts(invoice.products);
+        }
+      });
+    } else {
+      setOnEdit(false);
+      setId("");
+      setName("");
+      setAddress("");
+      setCountry("");
+      setHeader("");
+      setNumber("");
+      setInvoiceDate("");
+      setDueDate("");
+      setDelevaryDate("");
+      setReference("");
+      setProducts([
+        { id: uuidv4(), productName: "", quantity: "", price: "", amount: "" },
+      ]);
+    }
+  }, [params.id, invoices]);
+
   return (
     <div className="container insert_invoice my-5">
       <ToastContainer />
       <form className="p-3">
-        <h4 className="mt-4">Add Invoice</h4>
+        <h4 className="mt-4 mb-4">Add Invoice</h4>
         <div className="row">
           <div className="col-lg-6">
             <div className="mb-3">
@@ -104,26 +192,26 @@ function AddInvoice() {
                 onChange={(e) => {
                   setName(e.target.value);
                 }}
+                value={name}
               >
-                <option selected disabled>
-                  select a customer
-                </option>
+                <option selected>select a customer</option>
                 {customer.map((customer) => (
                   <option>{customer.name}</option>
                 ))}
               </select>
             </div>
             <div className="mb-3">
-              <label for="exampleFormControlTextarea1" class="form-label">
+              <label for="exampleFormControlTextarea1" className="form-label">
                 Address
               </label>
               <textarea
-                class="form-control"
+                className="form-control"
                 id="exampleFormControlTextarea1"
                 rows="3"
                 onChange={(e) => {
                   setAddress(e.target.value);
                 }}
+                value={address}
               ></textarea>
             </div>
             <div className="mb-3">
@@ -136,10 +224,9 @@ function AddInvoice() {
                 onChange={(e) => {
                   setCountry(e.target.value);
                 }}
+                value={country}
               >
-                <option selected disabled>
-                  select
-                </option>
+                <option selected>select</option>
                 <option value="usa">usa</option>
               </select>
             </div>
@@ -157,6 +244,7 @@ function AddInvoice() {
                   onChange={(e) => {
                     setHeader(e.target.value);
                   }}
+                  value={header}
                 />
               </div>
               <div className="col-md-6 mb-3">
@@ -170,6 +258,7 @@ function AddInvoice() {
                   onChange={(e) => {
                     setNumber(e.target.value);
                   }}
+                  value={number}
                 />
               </div>
               <div className="col-md-6 mb-3">
@@ -183,6 +272,7 @@ function AddInvoice() {
                   onChange={(e) => {
                     setInvoiceDate(e.target.value);
                   }}
+                  value={invoiceDate}
                 />
               </div>
               <div className="col-md-6 mb-3">
@@ -195,6 +285,7 @@ function AddInvoice() {
                   onChange={(e) => {
                     setDueDate(e.target.value);
                   }}
+                  value={duaDate}
                 />
               </div>
               <div className="col-md-6 mb-3">
@@ -207,6 +298,7 @@ function AddInvoice() {
                   onChange={(e) => {
                     setDelevaryDate(e.target.value);
                   }}
+                  value={delivaryDate}
                 />
               </div>
               <div className="col-md-6 mb-3">
@@ -220,6 +312,7 @@ function AddInvoice() {
                   onChange={(e) => {
                     setReference(e.target.value);
                   }}
+                  value={reference}
                 />
               </div>
             </div>
@@ -232,7 +325,7 @@ function AddInvoice() {
               className="row align-items-center border py-2 pt-3 my-1"
               key={product.id}
             >
-              <div className="col-md-4 mb-3">
+              <div className="col-md-2 mb-3">
                 <label for="validationCustom03" className="form-label">
                   Product Name<span className="text-danger">*</span>
                 </label>
@@ -271,7 +364,47 @@ function AddInvoice() {
                   value={product.price}
                 />
               </div>
-              <div className="col-md-3 mb-3">
+              <div className="col-md-2 mb-3">
+                <label for="validationCustomUsername" className="form-label">
+                  Tax<span className="text-danger">*</span>
+                </label>
+                <div className="input-group has-validation">
+                  <input
+                    type="number"
+                    className="form-control"
+                    id="validationCustomUsername"
+                    aria-describedby="inputGroupPrepend"
+                    required
+                    name="tax"
+                    onChange={(event) => handleChangeInput(product.id, event)}
+                    value={product.tax}
+                  />
+                  <span className="input-group-text" id="inputGroupPrepend">
+                    %
+                  </span>
+                </div>
+              </div>
+              <div className="col-md-2 mb-3">
+                <label for="validationCustomUsername" className="form-label">
+                  Discount<span className="text-danger">*</span>
+                </label>
+                <div className="input-group has-validation">
+                  <input
+                    type="number"
+                    className="form-control"
+                    id="validationCustomUsername"
+                    aria-describedby="inputGroupPrepend"
+                    required
+                    name="discount"
+                    onChange={(event) => handleChangeInput(product.id, event)}
+                    value={product.discount}
+                  />
+                  <span className="input-group-text" id="inputGroupPrepend">
+                    %
+                  </span>
+                </div>
+              </div>
+              <div className="col-md-2 mb-3">
                 <label for="validationCustom03" className="form-label">
                   Amount<span className="text-danger">*</span>
                 </label>
@@ -280,14 +413,18 @@ function AddInvoice() {
                   className="form-control"
                   placeholder="Amount"
                   name="amount"
+                  disabled
                   onChange={(event) => handleChangeInput(product.id, event)}
                   value={
                     (product.amount =
-                      parseFloat(product.quantity) * parseFloat(product.price))
+                      parseFloat(product.quantity) * parseFloat(product.price) -
+                      parseFloat(product.quantity) *
+                        parseFloat(product.price) *
+                        (parseFloat(product.discount) / 100))
                   }
                 />
               </div>
-              <div className="col-md-1 mt-2">
+              <div className="mt-2">
                 <button
                   className="btn btn-outline-danger"
                   disabled={products.length === 1}
@@ -306,7 +443,7 @@ function AddInvoice() {
         >
           + Add Line Item
         </button>
-        <div className="d-flex justify-content-end pt-3">
+        <div className="d-flex justify-content-end pt-3 pb-3">
           <button
             className="btn btn-light mx-1"
             onClick={() => {
@@ -316,17 +453,37 @@ function AddInvoice() {
             Back
           </button>
           <button className="btn btn-primary mx-1" onClick={saveInvoice}>
-            Save Invoice
+            {onEdit ? "Update Invoice" : "Save Invoice"}
           </button>
           <StripeCheckout stripeKey="pk_test_51JIDmDAcmD9cnihVfUC3Z06F9HJyqVKaUIl6UhDBF5HcbgR8T5PKLnPiDhjJf6wz4H1Lk7ZMiAWAW50Th3VwA6Q600zZG1YIim" />
         </div>
       </form>
+      {total === "NaN" ? null : (
+        <div className="px-5 py-3 total_invoce d-flex justify-content-between align-items-center">
+          <div>
+            <h6>Net amount (inc. discount/surcharge)</h6>
+          </div>
+          <div>
+            <h6>{total === "NaN" ? "0.00" : total} USD</h6>
+          </div>
+        </div>
+      )}
+      {salesTax === "NaN" ? null : (
+        <div className="px-5 py-3 total_invoce d-flex justify-content-between align-items-center">
+          <div>
+            <h6>Sales Tax {totalTax}%</h6>
+          </div>
+          <div>
+            <h6>{salesTax === "NaN" ? "0.00" : salesTax} USD</h6>
+          </div>
+        </div>
+      )}
       <div className="px-5 py-3 total_invoce d-flex justify-content-between align-items-center">
         <div>
           <h3>Total</h3>
         </div>
         <div>
-          <h5>{intotal ? intotal : "0.00"} USD</h5>
+          <h5>{inTotal === "NaN" ? "0.00" : inTotal} USD</h5>
         </div>
       </div>
     </div>

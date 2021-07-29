@@ -10,7 +10,7 @@ function Invoice() {
   const [invoices] = state.invoiceAPI.invoice;
   const [callback, setCallback] = state.invoiceAPI.callback;
   const [token] = state.token;
-  const [id, setId] = useState("");
+  const [setId] = useState("");
 
   const deleteInvoice = async (id) => {
     setId(id);
@@ -30,6 +30,7 @@ function Invoice() {
     <div className="container py-5 invoice">
       <ToastContainer />
       <Link className="btn btn-outline-primary" to="/addinvoice">
+        <i className="fas fa-plus mx-2"></i>
         Add Invoice
       </Link>
       <div className="table-responsive">
@@ -48,13 +49,20 @@ function Invoice() {
             {invoices &&
               invoices.map((invoice) => (
                 <tr>
-                  <th scope="row">{invoice.duaDate}</th>
-                  <td>{invoice.number}</td>
-                  <td>{invoice.name}</td>
+                  <th scope="row">
+                    <Link to={`/invoice/${invoice._id}`}>
+                      {invoice.duaDate}
+                    </Link>
+                  </th>
+                  <td>
+                    <Link to={`/invoice/${invoice._id}`}>{invoice.number}</Link>
+                  </td>
+                  <td>
+                    <Link to={`/invoice/${invoice._id}`}>{invoice.name}</Link>
+                  </td>
                   <td>{invoice.invoiceDate}</td>
                   <td>{invoice.total}</td>
                   <td>
-                    <i className="fas fa-edit mx-1 text-primary"></i>
                     <i
                       onClick={() => {
                         deleteInvoice(invoice._id);

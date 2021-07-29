@@ -46,6 +46,11 @@ function App() {
           component={isLogged ? AddInvoice : NotFound}
           path="/addinvoice"
         />
+        <Route
+          exact
+          component={isLogged ? AddInvoice : NotFound}
+          path="/invoice/:id"
+        />
         <Route exact component={NotFound} path="*" />
       </Switch>
     </Router>
