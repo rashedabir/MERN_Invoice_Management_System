@@ -171,7 +171,15 @@ function AddInvoice() {
       setDelevaryDate("");
       setReference("");
       setProducts([
-        { id: uuidv4(), description: "", quantity: "", price: "", amount: "" },
+        {
+          id: uuidv4(),
+          description: "",
+          quantity: "",
+          price: "",
+          tax: "",
+          discount: "",
+          amount: "",
+        },
       ]);
     }
   }, [params.id, invoices]);
@@ -185,8 +193,7 @@ function AddInvoice() {
     marginRight: 25,
     marginLeft: 25,
     marginBottom: 25,
-    logo: "https://public.easyinvoice.cloud/img/logo_en_original.png", //or base64
-    background: "https://public.easyinvoice.cloud/img/watermark-draft.jpg", //or base64 //img or pdf
+    background: "https://public.easyinvoice.cloud/pdf/sample-background.pdf", //or base64 //img or pdf
     sender: {
       company: "Entkreis",
       address: "Sample Street 123",
