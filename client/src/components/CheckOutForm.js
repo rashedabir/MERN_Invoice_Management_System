@@ -1,5 +1,7 @@
 import React from "react";
 import { ElementsConsumer, CardElement } from "@stripe/react-stripe-js";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import CardSection from "./CardSection";
 class CheckOutForm extends React.Component {
@@ -15,14 +17,17 @@ class CheckOutForm extends React.Component {
     const result = await stripe.createToken(card);
     if (result.error) {
       console.log(result.error.message);
+      toast.error("Payment Error");
     } else {
       console.log(result.token);
+      toast.success("Payment Success");
     }
   };
 
   render() {
     return (
       <div className="cardcontainer">
+        <ToastContainer />
         <form onSubmit={this.handleSubmit}>
           <CardSection />
           <button disabled={!this.props.stripe} className="btn-pay">

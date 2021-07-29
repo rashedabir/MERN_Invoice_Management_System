@@ -196,7 +196,7 @@ function AddInvoice() {
         },
       ]);
     }
-  }, [params.id, invoices]);
+  }, [params.id, invoices, invoiceNumber, today]);
 
   var data = {
     //"documentTitle": "RECEIPT", //Defaults to INVOICE
