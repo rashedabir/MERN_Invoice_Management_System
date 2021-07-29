@@ -5,8 +5,8 @@ import { GlobalState } from "../GlobalState";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useHistory, useParams } from "react-router-dom";
-import StripeCheckout from "react-stripe-checkout";
 import easyinvoice from "easyinvoice";
+import PaymentModule from "../components/PaymentModule";
 
 function AddInvoice() {
   const state = useContext(GlobalState);
@@ -25,12 +25,20 @@ function AddInvoice() {
       amount: "",
     },
   ]);
+
+  var today = new Date();
+  var dd = today.getDate();
+  var mm = today.toLocaleString("default", { month: "short" });
+  var yyyy = today.getFullYear();
+  today = dd + "-" + mm + "-" + yyyy;
+
+  const invoiceNumber = 1000 + invoices.length;
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [country, setCountry] = useState("");
-  const [header, setHeader] = useState("");
-  const [number, setNumber] = useState("");
-  const [invoiceDate, setInvoiceDate] = useState("");
+  const [header, setHeader] = useState("Invoice " + invoiceNumber);
+  const [number, setNumber] = useState("Invoice " + invoiceNumber);
+  const [invoiceDate, setInvoiceDate] = useState(today);
   const [duaDate, setDueDate] = useState("");
   const [delivaryDate, setDelevaryDate] = useState("");
   const [reference, setReference] = useState("");
@@ -169,9 +177,9 @@ function AddInvoice() {
       setName("");
       setAddress("");
       setCountry("");
-      setHeader("");
-      setNumber("");
-      setInvoiceDate("");
+      setHeader("Invoice " + invoiceNumber);
+      setNumber("Invoice " + invoiceNumber);
+      setInvoiceDate(today);
       setDueDate("");
       setDelevaryDate("");
       setReference("");
@@ -243,7 +251,7 @@ function AddInvoice() {
   }, []);
 
   return (
-    <div className="container insert_invoice my-5">
+    <div className="container my-5 insert_invoice">
       <ToastContainer />
       <form className="p-3">
         <h4 className="mt-4 mb-4">Add Invoice</h4>
@@ -269,7 +277,7 @@ function AddInvoice() {
             </div>
             <div className="mb-3">
               <label for="exampleFormControlTextarea1" className="form-label">
-                Address
+                Address<span className="text-danger">*</span>
               </label>
               <textarea
                 className="form-control"
@@ -282,7 +290,7 @@ function AddInvoice() {
               ></textarea>
             </div>
             <div className="row">
-              <div className="col-md-6 mb-3">
+              <div className="mb-3 col-md-6">
                 <label for="validationCustom03" className="form-label">
                   Zip Code<span className="text-danger">*</span>
                 </label>
@@ -296,7 +304,7 @@ function AddInvoice() {
                   value={zip}
                 />
               </div>
-              <div className="col-lg-6 mb-3">
+              <div className="mb-3 col-lg-6">
                 <label for="exampleFormControlInput1" className="form-label">
                   Country<span className="text-danger">*</span>
                 </label>
@@ -319,7 +327,7 @@ function AddInvoice() {
           </div>
           <div className="col-lg-6">
             <div className="row">
-              <div className="col-md-6 mb-3">
+              <div className="mb-3 col-md-6">
                 <label for="validationCustom03" className="form-label">
                   Invoice header<span className="text-danger">*</span>
                 </label>
@@ -333,9 +341,9 @@ function AddInvoice() {
                   value={header}
                 />
               </div>
-              <div className="col-md-6 mb-3">
+              <div className="mb-3 col-md-6">
                 <label for="validationCustom03" className="form-label">
-                  Invoice number<span className="text-danger">*</span>
+                  Invoice number
                 </label>
                 <input
                   type="text"
@@ -345,25 +353,27 @@ function AddInvoice() {
                     setNumber(e.target.value);
                   }}
                   value={number}
+                  disabled
                 />
               </div>
-              <div className="col-md-6 mb-3">
+              <div className="mb-3 col-md-6">
                 <label for="validationCustom03" className="form-label">
-                  Date of Invoice<span className="text-danger">*</span>
+                  Date of Invoice
                 </label>
                 <input
-                  type="date"
+                  type="text"
                   className="form-control"
                   placeholder="Invoice header"
                   onChange={(e) => {
                     setInvoiceDate(e.target.value);
                   }}
                   value={invoiceDate}
+                  disabled
                 />
               </div>
-              <div className="col-md-6 mb-3">
+              <div className="mb-3 col-md-6">
                 <label for="validationCustom03" className="form-label">
-                  Due Date
+                  Due Date<span className="text-danger">*</span>
                 </label>
                 <input
                   type="date"
@@ -374,7 +384,7 @@ function AddInvoice() {
                   value={duaDate}
                 />
               </div>
-              <div className="col-md-6 mb-3">
+              <div className="mb-3 col-md-6">
                 <label for="validationCustom03" className="form-label">
                   Date of Delivary<span className="text-danger">*</span>
                 </label>
@@ -387,9 +397,9 @@ function AddInvoice() {
                   value={delivaryDate}
                 />
               </div>
-              <div className="col-md-6 mb-3">
+              <div className="mb-3 col-md-6">
                 <label for="validationCustom03" className="form-label">
-                  Reference
+                  Reference<span className="text-danger">*</span>
                 </label>
                 <input
                   type="text"
@@ -408,10 +418,10 @@ function AddInvoice() {
         <div className="p-3">
           {products.map((product, index) => (
             <div
-              className="row align-items-center border py-2 pt-3 my-1"
+              className="py-2 pt-3 my-1 border row align-items-center"
               key={product.id}
             >
-              <div className="col-md-2 mb-3">
+              <div className="mb-3 col-md-2">
                 <label for="validationCustom03" className="form-label">
                   Product Name<span className="text-danger">*</span>
                 </label>
@@ -424,7 +434,7 @@ function AddInvoice() {
                   onChange={(event) => handleChangeInput(product.id, event)}
                 />
               </div>
-              <div className="col-md-2 mb-3">
+              <div className="mb-3 col-md-2">
                 <label for="validationCustom03" className="form-label">
                   Quantity<span className="text-danger">*</span>
                 </label>
@@ -437,7 +447,7 @@ function AddInvoice() {
                   value={product.quantity}
                 />
               </div>
-              <div className="col-md-2 mb-3">
+              <div className="mb-3 col-md-2">
                 <label for="validationCustom03" className="form-label">
                   Unit Price<span className="text-danger">*</span>
                 </label>
@@ -450,7 +460,7 @@ function AddInvoice() {
                   value={product.price}
                 />
               </div>
-              <div className="col-md-2 mb-3">
+              <div className="mb-3 col-md-2">
                 <label for="validationCustomUsername" className="form-label">
                   Tax<span className="text-danger">*</span>
                 </label>
@@ -471,7 +481,7 @@ function AddInvoice() {
                   </span>
                 </div>
               </div>
-              <div className="col-md-2 mb-3">
+              <div className="mb-3 col-md-2">
                 <label for="validationCustomUsername" className="form-label">
                   Discount<span className="text-danger">*</span>
                 </label>
@@ -492,9 +502,9 @@ function AddInvoice() {
                   </span>
                 </div>
               </div>
-              <div className="col-md-2 mb-3">
+              <div className="mb-3 col-md-2">
                 <label for="validationCustom03" className="form-label">
-                  Amount<span className="text-danger">*</span>
+                  Amount
                 </label>
                 <input
                   type="number"
@@ -531,9 +541,9 @@ function AddInvoice() {
         >
           + Add Line Item
         </button>
-        <div className="d-flex justify-content-end pt-3 pb-3">
+        <div className="pt-3 pb-3 d-flex justify-content-end">
           <button
-            className="btn btn-light mx-1"
+            className="mx-1 btn btn-light"
             onClick={() => {
               history.push("/invoice");
             }}
@@ -543,10 +553,17 @@ function AddInvoice() {
           <button className="btn btn-outline-warning" onClick={pdfGen}>
             Generate PDF
           </button>
-          <button className="btn btn-primary mx-1" onClick={saveInvoice}>
+          <button className="mx-1 btn btn-primary" onClick={saveInvoice}>
             {onEdit ? "Update Invoice" : "Save Invoice"}
           </button>
-          <StripeCheckout stripeKey="pk_test_51JIDmDAcmD9cnihVfUC3Z06F9HJyqVKaUIl6UhDBF5HcbgR8T5PKLnPiDhjJf6wz4H1Lk7ZMiAWAW50Th3VwA6Q600zZG1YIim" />
+          <button
+            type="button"
+            className="btn btn-outline-success"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+          >
+            Stripe Payment
+          </button>
         </div>
       </form>
       {total === "NaN" ? null : (
@@ -577,6 +594,7 @@ function AddInvoice() {
           <h5>{inTotal === "NaN" ? "0.00" : inTotal} USD</h5>
         </div>
       </div>
+      <PaymentModule />
     </div>
   );
 }
