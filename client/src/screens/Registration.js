@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -12,6 +12,7 @@ function Registration() {
   const [company, setCompany] = useState("");
   const [phone, setPhone] = useState("");
   const [country, setCountry] = useState("");
+  const [countryList, setCountryList] = useState([]);
   const fullname = firstname + " " + lastname;
 
   const registerSubmit = async (e) => {
@@ -33,6 +34,14 @@ function Registration() {
       toast.error(error.response.data.msg);
     }
   };
+
+  useEffect(() => {
+    const getCountry = async () => {
+      const res = await axios.get("https://restcountries.eu/rest/v2/all");
+      setCountryList(res.data);
+    };
+    getCountry();
+  }, []);
 
   return (
     <div className="container p-5 register_box">
@@ -73,7 +82,7 @@ function Registration() {
         </div>
         <div className="col-md-12">
           <label for="validationCustom03" className="form-label">
-            Your Email*
+            Your Email<span className="text-danger">*</span>
           </label>
           <div className="input-group has-validation">
             <span className="input-group-text" id="inputGroupPrepend">
@@ -93,7 +102,7 @@ function Registration() {
         </div>
         <div className="col-md-6">
           <label for="validationCustom03" className="form-label">
-            Password*
+            Password<span className="text-danger">*</span>
           </label>
           <input
             type="password"
@@ -107,7 +116,7 @@ function Registration() {
         </div>
         <div className="col-md-6">
           <label for="validationCustom03" className="form-label">
-            Repeat Password*
+            Repeat Password<span className="text-danger">*</span>
           </label>
           <input
             type="password"
@@ -134,7 +143,7 @@ function Registration() {
         </div>
         <div className="col-md-6">
           <label for="validationCustom05" className="form-label">
-            Phone*
+            Phone<span className="text-danger">*</span>
           </label>
           <input
             type="text"
@@ -147,7 +156,7 @@ function Registration() {
         </div>
         <div className="col-md-6">
           <label for="validationCustom04" className="form-label">
-            Country*
+            Country<span className="text-danger">*</span>
           </label>
           <select
             className="form-select"
@@ -158,7 +167,8 @@ function Registration() {
             <option selected disabled>
               Choose
             </option>
-            <option>Bangladesh</option>
+            {countryList &&
+              countryList.map((country) => <option> {country.name} </option>)}
           </select>
         </div>
         <div className="col-12">

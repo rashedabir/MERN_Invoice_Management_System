@@ -26,6 +26,7 @@ const invoiceCtrl = {
       duaDate,
       delivaryDate,
       reference,
+      zip,
       products,
       total,
     } = req.body;
@@ -42,6 +43,7 @@ const invoiceCtrl = {
         duaDate,
         delivaryDate,
         reference,
+        zip,
         products,
         total,
       });
@@ -63,6 +65,7 @@ const invoiceCtrl = {
       duaDate,
       delivaryDate,
       reference,
+      zip,
       products,
       total,
     } = req.body;
@@ -76,6 +79,7 @@ const invoiceCtrl = {
       duaDate,
       delivaryDate,
       reference,
+      zip,
       products,
       total,
     };

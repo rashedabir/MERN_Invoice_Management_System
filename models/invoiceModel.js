@@ -41,6 +41,10 @@ const invoiceSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    zip: {
+      type: String,
+      required: true,
+    },
     products: {
       type: Array,
       default: [],

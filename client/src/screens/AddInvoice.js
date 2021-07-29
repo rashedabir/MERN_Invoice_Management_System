@@ -34,8 +34,10 @@ function AddInvoice() {
   const [duaDate, setDueDate] = useState("");
   const [delivaryDate, setDelevaryDate] = useState("");
   const [reference, setReference] = useState("");
+  const [zip, setZip] = useState("");
   const [onEdit, setOnEdit] = useState(false);
   const [_id, setId] = useState("");
+  const [countryList, setCountryList] = useState([]);
   const history = useHistory();
   const params = useParams();
 
@@ -103,6 +105,7 @@ function AddInvoice() {
             duaDate: duaDate,
             delivaryDate: delivaryDate,
             reference: reference,
+            zip: zip,
             products: products,
             total: inTotal,
           },
@@ -125,6 +128,7 @@ function AddInvoice() {
             duaDate: duaDate,
             delivaryDate: delivaryDate,
             reference: reference,
+            zip: zip,
             products: products,
             total: inTotal,
           },
@@ -155,6 +159,7 @@ function AddInvoice() {
           setDueDate(invoice.duaDate);
           setDelevaryDate(invoice.delivaryDate);
           setReference(invoice.reference);
+          setZip(invoice.zip);
           setProducts(invoice.products);
         }
       });
@@ -170,6 +175,7 @@ function AddInvoice() {
       setDueDate("");
       setDelevaryDate("");
       setReference("");
+      setZip("");
       setProducts([
         {
           id: uuidv4(),
@@ -207,8 +213,8 @@ function AddInvoice() {
     client: {
       company: "Rashed Corp",
       address: address,
-      zip: "4567 CD",
-      city: "Los Angeles",
+      zip: zip,
+      city: address,
       country: country,
       //"custom1": "custom value 1",
       //"custom2": "custom value 2",
@@ -227,6 +233,14 @@ function AddInvoice() {
       easyinvoice.download("myInvoice.pdf", result.pdf);
     });
   };
+
+  useEffect(() => {
+    const getCountry = async () => {
+      const res = await axios.get("https://restcountries.eu/rest/v2/all");
+      setCountryList(res.data);
+    };
+    getCountry();
+  }, []);
 
   return (
     <div className="container insert_invoice my-5">
@@ -267,21 +281,40 @@ function AddInvoice() {
                 value={address}
               ></textarea>
             </div>
-            <div className="mb-3">
-              <label for="exampleFormControlInput1" className="form-label">
-                Country<span className="text-danger">*</span>
-              </label>
-              <select
-                className="form-select"
-                aria-label="Default select example"
-                onChange={(e) => {
-                  setCountry(e.target.value);
-                }}
-                value={country}
-              >
-                <option selected>select</option>
-                <option value="usa">usa</option>
-              </select>
+            <div className="row">
+              <div className="col-md-6 mb-3">
+                <label for="validationCustom03" className="form-label">
+                  Zip Code<span className="text-danger">*</span>
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Zip Code"
+                  onChange={(e) => {
+                    setZip(e.target.value);
+                  }}
+                  value={zip}
+                />
+              </div>
+              <div className="col-lg-6 mb-3">
+                <label for="exampleFormControlInput1" className="form-label">
+                  Country<span className="text-danger">*</span>
+                </label>
+                <select
+                  className="form-select"
+                  aria-label="Default select example"
+                  onChange={(e) => {
+                    setCountry(e.target.value);
+                  }}
+                  value={country}
+                >
+                  <option selected>select</option>
+                  {countryList &&
+                    countryList.map((country) => (
+                      <option> {country.name} </option>
+                    ))}
+                </select>
+              </div>
             </div>
           </div>
           <div className="col-lg-6">
@@ -428,6 +461,7 @@ function AddInvoice() {
                     id="validationCustomUsername"
                     aria-describedby="inputGroupPrepend"
                     required
+                    placeholder="Tax"
                     name="tax"
                     onChange={(event) => handleChangeInput(product.id, event)}
                     value={product.tax}
@@ -448,6 +482,7 @@ function AddInvoice() {
                     id="validationCustomUsername"
                     aria-describedby="inputGroupPrepend"
                     required
+                    placeholder="Discount"
                     name="discount"
                     onChange={(event) => handleChangeInput(product.id, event)}
                     value={product.discount}
