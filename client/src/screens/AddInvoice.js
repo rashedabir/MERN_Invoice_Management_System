@@ -6,6 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useHistory, useParams } from "react-router-dom";
 import StripeCheckout from "react-stripe-checkout";
+import easyinvoice from "easyinvoice";
 
 function AddInvoice() {
   const state = useContext(GlobalState);
@@ -174,6 +175,51 @@ function AddInvoice() {
       ]);
     }
   }, [params.id, invoices]);
+
+  var data = {
+    //"documentTitle": "RECEIPT", //Defaults to INVOICE
+    //"locale": "de-DE", //Defaults to en-US, used for number formatting (see docs)
+    currency: "USD", //See documentation 'Locales and Currency' for more info
+    taxNotation: "vat", //or gst
+    marginTop: 25,
+    marginRight: 25,
+    marginLeft: 25,
+    marginBottom: 25,
+    logo: "https://public.easyinvoice.cloud/img/logo_en_original.png", //or base64
+    background: "https://public.easyinvoice.cloud/img/watermark-draft.jpg", //or base64 //img or pdf
+    sender: {
+      company: "Entkreis",
+      address: "Sample Street 123",
+      zip: "1234 AB",
+      city: "Sampletown",
+      country: "USA",
+      //"custom1": "custom value 1",
+      //"custom2": "custom value 2",
+      //"custom3": "custom value 3"
+    },
+    client: {
+      company: "Rashed Corp",
+      address: address,
+      zip: "4567 CD",
+      city: "Los Angeles",
+      country: country,
+      //"custom1": "custom value 1",
+      //"custom2": "custom value 2",
+      //"custom3": "custom value 3"
+    },
+    invoiceNumber: number,
+    invoiceDate: invoiceDate,
+    products: products,
+    bottomNotice: "Kindly pay your invoice within 15 days.",
+  };
+
+  const pdfGen = (e) => {
+    e.preventDefault();
+    easyinvoice.createInvoice(data, function (result) {
+      //The response will contain a base64 encoded PDF file
+      easyinvoice.download("myInvoice.pdf", result.pdf);
+    });
+  };
 
   return (
     <div className="container insert_invoice my-5">
@@ -451,6 +497,9 @@ function AddInvoice() {
             }}
           >
             Back
+          </button>
+          <button className="btn btn-outline-warning" onClick={pdfGen}>
+            Generate PDF
           </button>
           <button className="btn btn-primary mx-1" onClick={saveInvoice}>
             {onEdit ? "Update Invoice" : "Save Invoice"}
