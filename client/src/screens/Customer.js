@@ -44,7 +44,7 @@ function Customer() {
     <div className="container py-5 customer">
       <ToastContainer />
       <button
-        className="btn btn-outline-primary"
+        className="btn btn-primary"
         type="button"
         data-bs-toggle="modal"
         data-bs-target="#staticBackdrop"
@@ -53,7 +53,7 @@ function Customer() {
         Add Customer
       </button>
       <div className="table-responsive">
-        <table className="table table-light my-3 table-striped">
+        <table className="table table-light my-3 table-striped text-center">
           <thead>
             <tr>
               <th scope="col">Type</th>
@@ -67,7 +67,7 @@ function Customer() {
             {customer
               ? customer.map((customer) => (
                   <tr>
-                    <td>{customer.type}</td>
+                    <th>{customer.type}</th>
                     <td>{customer.phone}</td>
                     <td>{customer.name}</td>
                     <td>{customer.city}</td>

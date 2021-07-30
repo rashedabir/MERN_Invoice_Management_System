@@ -29,12 +29,12 @@ function Invoice() {
   return (
     <div className="container py-5 invoice">
       <ToastContainer />
-      <Link className="btn btn-outline-primary" to="/addinvoice">
+      <Link className="btn btn-primary" to="/addinvoice">
         <i className="fas fa-plus mx-2"></i>
         Add Invoice
       </Link>
       <div className="table-responsive">
-        <table class="table table-light my-3 table-striped">
+        <table class="table table-light my-3 table-striped text-center">
           <thead>
             <tr>
               <th scope="col">Due Date</th>

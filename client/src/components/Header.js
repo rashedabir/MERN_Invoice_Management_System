@@ -16,7 +16,7 @@ function Header() {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <nav className="navbar navbar-expand-lg navbar-dark">
       <div className="container">
         <Link className="navbar-brand" to={isLogged ? "/dashboard" : "/"}>
           <strong>Entkreis</strong>
@@ -97,15 +97,13 @@ function Header() {
             </ul>
           )}
           {isLogged ? (
-            <ul className="navbar-nav mx-2 mb-lg-0 align-center">
-              <li className="nav-item mt-2">
-                <i className="fas fa-user-circle"></i> {user.email}
+            <ul className="navbar-nav mb-lg-0">
+              <li className="nav-item text-light align-items-center">
+                <i className="fas fa-user-circle mt-2 user_icon"></i>{" "}
+                <span>{user.email}</span>
               </li>
               <li>
-                <button
-                  className="btn btn-outline-danger mx-3"
-                  onClick={logOut}
-                >
+                <button className="btn btn-danger px-3 mx-3" onClick={logOut}>
                   <i className="fas fa-sign-out-alt"></i> Logout
                 </button>
               </li>

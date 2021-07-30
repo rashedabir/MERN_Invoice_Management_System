@@ -4,17 +4,51 @@
 }
 body {
   font-family: "Poppins", sans-serif;
+  background: #cb356b; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #bd3f32,
+    #cb356b
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #bd3f32,
+    #cb356b
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+/*------------------------navbar------------------------*/
+
+.navbar {
+  background: #642b73; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #c6426e,
+    #642b73
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #c6426e,
+    #642b73
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+.user_icon {
+  font-size: 20px;
 }
 
 .form_box {
   max-width: 500px;
   margin: 7% auto;
   border: 2px solid #eee;
+  background-color: white;
+  box-shadow: 0 0 10px rgb(26, 25, 25);
 }
 .register_box {
   max-width: 500px;
   margin: 15px auto;
   border: 2px solid #eee;
+  background-color: white;
+  box-shadow: 0 0 10px rgb(26, 25, 25);
 }
 .register_box .btn {
   width: 100%;
@@ -59,8 +93,9 @@ body {
 }
 .home_details {
   position: absolute;
-  top: 30%;
-  left: 10%;
+  top: 50%;
+  left: 100px;
+  transform: translate(0%, -50%);
 }
 .customer i {
   cursor: pointer;
@@ -70,6 +105,8 @@ body {
 }
 .insert_invoice {
   border: 2px solid #eee;
+  background-color: white;
+  box-shadow: 0 0 10px rgb(26, 25, 25);
 }
 .total_invoce {
   border-top: 1px solid #e6e6e6;
@@ -122,10 +159,11 @@ h3.product-title {
   margin-bottom: 15px;
 }
 .dasboard_tabs {
-  background-color: #eee;
+  background-color: white;
+  box-shadow: 0 0 10px rgb(26, 25, 25);
 }
 .dashbord_help {
-  background-color: #eee;
+  background-color: white;
 }
 
 .bloc-tabs {
@@ -201,24 +239,35 @@ button {
   font-size: 20px;
 }
 .dashboard_heading {
-  background-color: #eee;
+  background-color: white;
+  box-shadow: 0 0 10px rgb(26, 25, 25);
 }
 
 .dashbord_help {
   text-align: center;
   margin: auto;
+  box-shadow: 0 0 10px rgb(26, 25, 25);
 }
 .dashbord_help img {
   border-radius: 50%;
   margin-bottom: 30px;
 }
 .help_button {
-  border: 1px solid white;
+  border: 1px solid #eee;
   padding: 13px;
   cursor: pointer;
   transition: all 0.4s;
 }
 .help_button:hover {
   border: 1px solid blue;
-  padding: 13px;
+  box-shadow: 0 0 10px rgb(26, 25, 25);
+}
+.home_details h3 {
+  color: white;
+}
+.home_details p {
+  color: white;
+}
+.table {
+  box-shadow: 0 0 10px rgb(26, 25, 25);
 }

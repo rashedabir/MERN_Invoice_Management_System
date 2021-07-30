@@ -200,24 +200,19 @@ function AddInvoice() {
   }, [params.id, invoices, invoiceNumber, today]);
 
   var data = {
-    //"documentTitle": "RECEIPT", //Defaults to INVOICE
-    //"locale": "de-DE", //Defaults to en-US, used for number formatting (see docs)
-    currency: "USD", //See documentation 'Locales and Currency' for more info
-    taxNotation: "vat", //or gst
+    currency: "USD",
+    taxNotation: "vat",
     marginTop: 25,
     marginRight: 25,
     marginLeft: 25,
     marginBottom: 25,
-    background: "https://public.easyinvoice.cloud/pdf/sample-background.pdf", //or base64 //img or pdf
+    background: "https://public.easyinvoice.cloud/pdf/sample-background.pdf",
     sender: {
       company: "Entkreis",
       address: "Sample Street 123",
       zip: "1234 AB",
       city: "Sampletown",
       country: "USA",
-      //"custom1": "custom value 1",
-      //"custom2": "custom value 2",
-      //"custom3": "custom value 3"
     },
     client: {
       company: "Rashed Corp",
@@ -225,9 +220,6 @@ function AddInvoice() {
       zip: zip,
       city: address,
       country: country,
-      //"custom1": "custom value 1",
-      //"custom2": "custom value 2",
-      //"custom3": "custom value 3"
     },
     invoiceNumber: number,
     invoiceDate: invoiceDate,
@@ -238,7 +230,6 @@ function AddInvoice() {
   const pdfGen = (e) => {
     e.preventDefault();
     easyinvoice.createInvoice(data, function (result) {
-      //The response will contain a base64 encoded PDF file
       easyinvoice.download("myInvoice.pdf", result.pdf);
     });
   };
@@ -252,7 +243,7 @@ function AddInvoice() {
   }, []);
 
   return (
-    <div className="container my-5 insert_invoice">
+    <div className="container my-5 mx-auto insert_invoice">
       <ToastContainer />
       <form className="p-3">
         <h4 className="mt-4 mb-4">Add Invoice</h4>
@@ -411,6 +402,12 @@ function AddInvoice() {
                   }}
                   value={reference}
                 />
+              </div>
+              <div className="col-md-12 mb-3">
+                <p>
+                  If you've no reference write <strong>none</strong>.
+                  <span className="text-danger">***</span>
+                </p>
               </div>
             </div>
           </div>
