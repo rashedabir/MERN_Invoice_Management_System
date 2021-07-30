@@ -103,10 +103,10 @@ function Header() {
               </li>
               <li>
                 <button
-                  className="btn btn-outline-danger mx-2"
+                  className="btn btn-outline-danger mx-3"
                   onClick={logOut}
                 >
-                  Logout
+                  <i className="fas fa-sign-out-alt"></i> Logout
                 </button>
               </li>
             </ul>
