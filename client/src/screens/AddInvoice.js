@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useHistory, useParams } from "react-router-dom";
 import easyinvoice from "easyinvoice";
 import PaymentModule from "../components/PaymentModule";
+import SendInvoice from "../components/SendInvoice";
 
 function AddInvoice() {
   const state = useContext(GlobalState);
@@ -541,28 +542,50 @@ function AddInvoice() {
         >
           + Add Line Item
         </button>
-        <div className="pt-3 pb-3 d-flex justify-content-end">
+        <div className="pt-3 pb-3 row d-flex justify-content-end">
           <button
-            className="mx-1 btn btn-light"
+            className="col-lg-2 m-1 btn btn-light"
             onClick={() => {
               history.push("/invoice");
             }}
           >
-            Back
+            <i className="fas fa-undo-alt"></i> Back
           </button>
-          <button className="btn btn-outline-warning" onClick={pdfGen}>
-            Generate PDF
+          <button
+            className="col-lg-2 m-1 btn btn-outline-warning"
+            onClick={pdfGen}
+          >
+            <i className="fas fa-cogs"></i> Generate PDF
           </button>
-          <button className="mx-1 btn btn-primary" onClick={saveInvoice}>
-            {onEdit ? "Update Invoice" : "Save Invoice"}
+          <button
+            className="col-lg-2 m-1 btn btn-primary"
+            onClick={saveInvoice}
+          >
+            {onEdit ? (
+              <div>
+                <i className="fas fa-save"></i> Update Invoice
+              </div>
+            ) : (
+              <div>
+                <i className="fas fa-save"></i> Save Invoice
+              </div>
+            )}
           </button>
           <button
             type="button"
-            className="btn btn-outline-success"
+            className="col-lg-2 m-1 btn btn-outline-success"
             data-bs-toggle="modal"
             data-bs-target="#exampleModal"
           >
-            Stripe Payment
+            <i className="fab fa-stripe-s"></i> Pay with Stripe
+          </button>
+          <button
+            type="button"
+            className="col-lg-2 m-1 btn btn-success"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal1"
+          >
+            Send Invoice <i className="fas fa-paper-plane"></i>
           </button>
         </div>
       </form>
@@ -595,6 +618,7 @@ function AddInvoice() {
         </div>
       </div>
       <PaymentModule />
+      <SendInvoice name={name} />
     </div>
   );
 }

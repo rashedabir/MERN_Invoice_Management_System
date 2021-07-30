@@ -18,7 +18,7 @@ function Header() {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container">
-        <Link className="navbar-brand" to="/">
+        <Link className="navbar-brand" to={isLogged ? "/dashboard" : "/"}>
           <strong>Entkreis</strong>
         </Link>
         <button
@@ -39,7 +39,7 @@ function Header() {
                 <Link
                   className="nav-link active"
                   aria-current="page"
-                  to="/Dashboard"
+                  to="/dashboard"
                 >
                   Dashboard
                 </Link>
