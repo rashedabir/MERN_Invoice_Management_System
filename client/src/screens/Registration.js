@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 function Registration() {
   const [firstname, setFirstName] = useState("");
@@ -45,7 +44,6 @@ function Registration() {
 
   return (
     <div className="container p-5 register_box">
-      <ToastContainer />
       <h3 className="pb-4 text-center">
         <strong>Entkreis</strong>
       </h3>

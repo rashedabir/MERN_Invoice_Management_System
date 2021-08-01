@@ -1,7 +1,6 @@
 import React from "react";
 import emailjs, { init } from "emailjs-com";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 function SendInvoice({ name }) {
   const senEmail = (e) => {
@@ -47,7 +46,6 @@ function SendInvoice({ name }) {
               ></button>
             </div>
             <div className="modal-body">
-              <ToastContainer />
               <form onSubmit={senEmail}>
                 <div className="mb-3">
                   <label for="exampleFormControlInput1" className="form-label">

@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { GlobalState } from "../GlobalState";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useHistory, useParams } from "react-router-dom";
 import easyinvoice from "easyinvoice";
@@ -124,6 +124,7 @@ function AddInvoice() {
         );
         toast.success("Invoices Updated");
         setCallback(!callback);
+        history.push("/invoice");
       } else {
         await axios.post(
           "/api/invoice",
@@ -147,6 +148,7 @@ function AddInvoice() {
         );
         toast.success("Invoices Added");
         setCallback(!callback);
+        history.push("/invoice");
       }
     } catch (error) {
       toast.error(error.response.data.msg);
@@ -244,7 +246,6 @@ function AddInvoice() {
 
   return (
     <div className="container my-5 mx-auto insert_invoice">
-      <ToastContainer />
       <form className="p-3">
         <h4 className="mt-4 mb-4">Add Invoice</h4>
         <div className="row">

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import axios from "axios";
 
 function Login() {
@@ -16,8 +15,8 @@ function Login() {
         password: password,
       });
       localStorage.setItem("firstLogin", true);
-
       window.location.href = "/dashboard";
+      toast.success("Wellcome");
     } catch (error) {
       toast.error(error.response.data.msg);
     }
@@ -25,7 +24,6 @@ function Login() {
 
   return (
     <div className="container p-5 text-center form_box">
-      <ToastContainer />
       <h3 className="pb-4">
         <strong>Entkreis</strong>
       </h3>

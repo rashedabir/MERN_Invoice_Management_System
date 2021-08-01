@@ -2,8 +2,7 @@ import axios from "axios";
 import React, { useContext, useState } from "react";
 import CustomerModal from "../components/CustomerModal";
 import { GlobalState } from "../GlobalState";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 function Customer() {
   const state = useContext(GlobalState);
@@ -42,7 +41,6 @@ function Customer() {
 
   return (
     <div className="container py-5 customer">
-      <ToastContainer />
       <button
         className="btn btn-primary"
         type="button"

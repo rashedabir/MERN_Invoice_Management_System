@@ -1,8 +1,7 @@
 import axios from "axios";
 import React, { useContext } from "react";
 import { GlobalState } from "../GlobalState";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 function CustomerModal({
   id,
@@ -77,7 +76,6 @@ function CustomerModal({
   };
   return (
     <>
-      <ToastContainer />
       <div
         className="modal fade"
         id="staticBackdrop"

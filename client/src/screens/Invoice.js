@@ -1,8 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { GlobalState } from "../GlobalState";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import axios from "axios";
 
 function Invoice() {
@@ -28,7 +27,6 @@ function Invoice() {
   };
   return (
     <div className="container py-5 invoice">
-      <ToastContainer />
       <Link className="btn btn-primary" to="/addinvoice">
         <i className="fas fa-plus mx-2"></i>
         Add Invoice
